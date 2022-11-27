@@ -9,3 +9,33 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  pk_user_id  String        @id @default(cuid())
+  username    String
+  email       String?       @unique
+  password    String
+  createdAt   DateTime      @default(now()) @map(name: "created_at")
+  zipcode     String
+  visitedPark visitedPark[]
+
+  @@map(name: "users")
+}
+
+model Park {
+  pk_park_id  String        @id @default(cuid())
+  park_name   String        @unique
+  park_code   String        @unique
+  state       String
+  visitedUser visitedPark[]
+}
+
+model visitedPark {
+  pk_uvp_id     String   @id @default(cuid())
+  user          User     @relation(fields: [fk_user_id], references: [pk_user_id])
+  fk_user_id    String
+  date_of_visit DateTime
+  park          Park     @relation(fields: [fk_park_id], references: [pk_park_id])
+  fk_park_id    String
+  fav           Boolean
+}
