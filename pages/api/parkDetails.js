@@ -1,19 +1,13 @@
 //import { NextApiRequest, NextApiResponse } from 'next'
 //(req: NextApiRequest, res: NextApiResponse)
 export default async function handler(req, res) {
+  const { parkCode } = req.body;
 
-  // first grab the parkCode
-  const { parkCode } = req.body; 
-  // fetch that specific park info from API
-  // send entire park object back
-  const parkInfo = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${parkCode}&api_key=zLbSDcf7rYq9FzTqTDWlFOeER9ygN3vl5UtPFYuH`);
+  const parkDetails = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${parkCode}&api_key=I9sAHx1bu9OtW60yyqrgRBMPTDnsuPrMQJrkngf1`);
 
+  //the fetch doesn't appear to be fully working in Postman... (we get an almost empty park details object.. it's weird)
 
-  res.status(200).json({ parkInfo })
+  // we should probably add error handling here
+
+  res.status(200).json({ parkDetails });
 }
-
-  // if (!res.ok) {
-  //   // This will activate the closest `error.js` Error Boundary
-  //   throw new Error('Failed to fetch data');
-  // }
-  
