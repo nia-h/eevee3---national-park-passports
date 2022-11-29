@@ -1,11 +1,10 @@
-import Parks from './page';
+import '../globals.css';
 
-export default function ParkLayout() {
+export default function ParksLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      {/* signout functionality */}
-      <h1>HI</h1>
-      <Parks />
-    </div>
+    <>
+      <div>We are in parks directory</div>
+      {children}
+    </>
   );
 }

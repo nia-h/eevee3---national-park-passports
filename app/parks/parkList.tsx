@@ -278,7 +278,7 @@ export default function ParkList() {
                         />
                       </TableCell>
                       <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {<Link href={`/${row.park_code}`}>{row.park_name}</Link>};
+                        {<Link href={`/parks/${row.park_code}`}>{row.park_name}</Link>};
                       </TableCell>
                       <TableCell align='right'>{row.state}</TableCell>
                       <TableCell align='right'>{row.park_code}</TableCell>
