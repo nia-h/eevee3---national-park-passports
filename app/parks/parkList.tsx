@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import ReactDom from 'react-dom';
+import Link from 'next/link';
 import { Park } from '../../typings';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -277,7 +278,7 @@ export default function ParkList() {
                         />
                       </TableCell>
                       <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {row.park_name}
+                        {<Link href={`/${row.park_code}`}>{row.park_name}</Link>};
                       </TableCell>
                       <TableCell align='right'>{row.state}</TableCell>
                       <TableCell align='right'>{row.park_code}</TableCell>
