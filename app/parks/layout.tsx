@@ -1,11 +1,11 @@
-import StickyHeadTable from "./page";
+import Parks from './page';
 
 export default function ParkLayout() {
   return (
     <div>
       {/* signout functionality */}
       <h1>HI</h1>
-      <StickyHeadTable/>
+      <Parks />
     </div>
   );
 }
