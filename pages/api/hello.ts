@@ -4,13 +4,13 @@ import { Park } from '../../typings';
 import prisma from '../../lib/prisma';
 
 type Data = {
-  name: Park[];
+  allParks: Park[];
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const parks: Park[] = await prisma.park.findMany();
+  const allParks: Park[] = await prisma.park.findMany();
   prisma.$disconnect();
   //const data: string = JSON.stringify(parks);
 
-  res.status(200).json({ name: parks });
+  res.status(200).json({ allParks: allParks });
 }
