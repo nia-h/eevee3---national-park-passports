@@ -1,39 +1,132 @@
-// 'use client';
-// // import ParkDetails from './ParkDetails';
+import Image from 'next/image';
+import hydrateRoot from 'react-dom';
+import { PrismaClient } from '@prisma/client';
 
-// // export default function ParkPage() {
-// //   // specific park details page
-// //   return;
-// //   <>
-// //     {' '}
-// //     <h1>Hello, Next.js!</h1>;
+// const prisma = new PrismaClient();
 
-// //   </>;
-// // }
-// export async function generateStaticParams() {
-//   //const posts = await getPosts();
+// async function getData(req,res) {
+//   const parksCodes = await prisma.park.parkCode.findMany();
+//   prisma.$disconnect();
+//   const data: string = JSON.stringify(parksCodes);
 
-//   return [{ slug: 'adam' }];
-//   // posts.map((post) => ({
-//   //   slug: post.slug,
-//   // }));
+//   res.status(200).json({ parksCodes: data });
 // }
 
-// const parkCode = 'adam';
-// async function getData() {
-//   //const res = await fetch('https://api.example.com/...');
-//   const res = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${parkCode}&api_key=zLbSDcf7rYq9FzTqTDWlFOeER9ygN3vl5UtPFYuH`);
+export async function generateStaticParams() {
+  const parkCodes = await getData();
 
-//   // The return value is *not* serialized
-//   // You can return Date, Map, Set, etc.
-//   return res.json();
-// }
+  return parkCodes.map((code) => ({
+    park: code,
+  }));
+}
 
-// // This is an async Server Component
-// export default async function ParkDetails({ params }) {
-//   const { slug } = params;
-//   const data = await getData();
-//   console.log('data==>', data);
+export default async function ParkDetails({ params }) {
+  const { park } = params;
+  // console.log('params', params)
+  //{ park: 'acad' }
 
-//   return <main>{data}</main>;
-// }
+  const parkInfo = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${park}&api_key=I9sAHx1bu9OtW60yyqrgRBMPTDnsuPrMQJrkngf1`)
+    .then(res => res.json())
+
+  const { data } = parkInfo;
+
+  const {
+    fullName, 
+    url,
+    description, 
+    activities, 
+    contacts, 
+    entranceFees, 
+    entrancePasses, 
+    directionsInfo, 
+    directionsUrl, 
+    operatingHours, 
+    images, 
+    weatherInfo
+   } = data[0];
+
+  const activityList = activities.map((activity: any) => {
+    <li>{activity.name}</li>;
+  });
+
+  const feeInfo = entranceFees.map((fee: any, i: any) => {
+    return (
+      <div className='fees' key={i}>
+        <h3>{fee.title}</h3>
+        <p>{fee.cost}</p>
+        <p>{fee.description}</p>
+      </div>
+    )
+  });
+
+  const passInfo = entrancePasses.map((fee: any, i: any) => {
+    return (
+      <div className='fees' key={i}>
+        <h3>{fee.title}</h3>
+        <p>{fee.cost}</p>
+        <p>{fee.description}</p>
+      </div>
+    )
+  });
+
+  // oper hours
+  // loop thru operatingHours[0].standardHours and display each day of the week as a p tag 
+
+  // STYLING:
+  /*
+  Each section is divided into divs for easier styling with responsive design
+  Each section also has their own id for syling
+
+  Thoughts:
+  - for mobile, organize into a vertical line 
+  - each increase in screen width we could add a column? 
+      mid size screen: title on top --> 2 columns of 3 rows 
+      large size screen: title on top --> 3 columns of 2 rows
+  */
+  return (
+    <>
+      <div id='parkNameAndPhoto'>
+        <h1>{fullName}</h1>
+        <p>{description}</p>
+        {/* <Image src={images[0].url} alt={images[0].altText} width='300' height='300'/> */}
+        <caption>{images[0].caption}</caption>
+        <caption>`Photographer: ${images[0].credit}`</caption>
+        <br />
+        <br />
+        {/* <a href={url}>More Park Details</a> */}
+      </div>
+      <div id='parkActivities'>
+        <h2>Park Activities</h2>
+        <ul>{activityList}</ul>
+      </div>
+      <div id='parkFees'>
+        <h2>Entrance Fees & Passes</h2>
+        {feeInfo}
+        {passInfo}
+      </div>
+      <div id='parkOperatingHours'>
+        <h2>Operating Hours</h2>
+        {/* <h3>{operatingHours[0].description}</h3>
+        <p>{operatingHours[0].standardHours}</p> */}
+      </div>
+      <div id='parkDirections'>
+        <h2>Parking Directions</h2>
+        <p>{directionsInfo}</p>
+        {/* <a href={directionsUrl}>Click for Directions</a> */}
+      </div>
+      <div id='parkWeather'>
+        <h2>Weather Info</h2>
+        <p>{weatherInfo}</p>
+      </div>
+      <div id='parkContactInfo'>
+        <h2>Park Phone Number</h2>
+        <p>{contacts.phoneNumbers[0].phoneNumber}</p>
+      </div>
+    </>
+  );
+}
+
+
+
+
+
