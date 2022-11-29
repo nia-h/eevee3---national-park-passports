@@ -1,14 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Park } from '../../typings';
+import prisma from '../../lib/prisma';
 
 type Data = {
   name: string;
 };
-
-import { PrismaClient } from '@prisma/client';
-import { RedoTwoTone } from '@mui/icons-material';
-const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
   const parks: Park[] = await prisma.park.findMany();
