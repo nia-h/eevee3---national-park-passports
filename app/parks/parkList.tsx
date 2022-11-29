@@ -245,7 +245,7 @@ export default function ParkList() {
     fetch('http://localhost:3000/api/hello')
       .then(data => data.json())
       .then(data => {
-        setParks(JSON.parse(data.name));
+        setParks(data.name);
       });
   });
 
