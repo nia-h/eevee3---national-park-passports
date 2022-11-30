@@ -1,29 +1,26 @@
 import Image from 'next/image';
 import hydrateRoot from 'react-dom';
-import { PrismaClient } from '@prisma/client';
 
-// const prisma = new PrismaClient();
-
-// async function getData(req,res) {
-//   const parksCodes = await prisma.park.parkCode.findMany();
-//   prisma.$disconnect();
-//   const data: string = JSON.stringify(parksCodes);
-
-//   res.status(200).json({ parksCodes: data });
-// }
+function helper() {
+  const codes = fetch('http://localhost:3000/api/parkCodes')
+    .then(data => data.json())
+  
+  return codes;
+}
 
 export async function generateStaticParams() {
-  const parkCodes = await getData();
 
-  return parkCodes.map((code) => ({
-    park: code,
-  }));
+  const codes = await helper();
+
+  return (
+    codes.name.map((code) => ({
+      park: code,
+    }))
+  );
 }
 
 export default async function ParkDetails({ params }) {
   const { park } = params;
-  // console.log('params', params)
-  //{ park: 'acad' }
 
   const parkInfo = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${park}&api_key=I9sAHx1bu9OtW60yyqrgRBMPTDnsuPrMQJrkngf1`)
     .then(res => res.json())
@@ -69,8 +66,16 @@ export default async function ParkDetails({ params }) {
     )
   });
 
-  // oper hours
-  // loop thru operatingHours[0].standardHours and display each day of the week as a p tag 
+  const obj = operatingHours[0].standardHours;
+  const arr = [];
+  for (const key in obj) {
+    arr.push(`${key}: ${obj[key]}`);
+  }
+  const hours = arr.map((hour, i) => {
+    return (
+      <li key={i}>{hour}</li>
+    )
+  })
 
   // STYLING:
   /*
@@ -106,8 +111,8 @@ export default async function ParkDetails({ params }) {
       </div>
       <div id='parkOperatingHours'>
         <h2>Operating Hours</h2>
-        {/* <h3>{operatingHours[0].description}</h3>
-        <p>{operatingHours[0].standardHours}</p> */}
+        <h3>{operatingHours[0].description}</h3>
+        <ul>{hours}</ul>
       </div>
       <div id='parkDirections'>
         <h2>Parking Directions</h2>
