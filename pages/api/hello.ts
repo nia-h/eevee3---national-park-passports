@@ -14,7 +14,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     },
   });
 
-  console.log('allParks[0]===>', allParks[0]);
   prisma.$disconnect();
   //const data: string = JSON.stringify(parks);
   res.status(200).json({ allParks: allParks });

@@ -24,6 +24,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { AnyRecord } from 'dns';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -183,7 +184,10 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   );
 }
 
-export default function ParkList() {
+export default function ParkList(props: any) {
+  const userEmail = props.userEmail;
+  console.log('userEmail==>', userEmail);
+
   const [parks, setParks] = useState([]);
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Park>('state');
@@ -248,7 +252,7 @@ export default function ParkList() {
       .then(data => {
         setParks(data.allParks);
       });
-  });
+  }, []);
 
   return (
     <Box sx={{ width: '100%' }}>
