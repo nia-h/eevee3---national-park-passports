@@ -8,8 +8,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'www.nps.gov',
-        port: '',
-        pathname: '',
+        pathname: '/common/uploads/structured_data/**',
       },
     ],
   },

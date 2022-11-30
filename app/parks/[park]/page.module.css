@@ -1,0 +1,40 @@
+#app {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.container {
+  border: 2px solid black;
+  border-radius: 10px;
+}
+
+#parkNameAndPhoto {
+
+}
+
+#parkActivities {
+
+}
+
+#parkFees {
+  
+}
+
+#parkOperatingHours {
+  
+}
+
+#parkDirections {
+  
+}
+
+#parkWeather {
+  
+}
+
+#parkContactInfo {
+  
+}

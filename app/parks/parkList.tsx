@@ -247,7 +247,7 @@ export default function ParkList() {
       .then(data => {
         setParks(JSON.parse(data.name));
       });
-  });
+  }, []);
 
   return (
     <Box sx={{ width: '100%' }}>
