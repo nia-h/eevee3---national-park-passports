@@ -5,6 +5,7 @@ export default function Parks() {
   return (
     <div>
       {/*@ts-ignore*/}
+      {/* map would go here */}
       <ParkList />
     </div>
   );

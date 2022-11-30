@@ -7,7 +7,6 @@ type Data = {
 };
 
 import { PrismaClient } from '@prisma/client';
-import { RedoTwoTone } from '@mui/icons-material';
 const prisma = new PrismaClient();
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
