@@ -1,13 +1,21 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { Park } from '../../typings';
+import prisma from '../../lib/prisma';
 
 type Data = {
-  name: string
-}
+  allParks: Park[];
+};
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) {
-  res.status(200).json({ name: 'John Doe' })
+export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+  const allParks: Park[] = await prisma.park.findMany({
+    include: {
+      visitedUser: true,
+    },
+  });
+
+  console.log('allParks[0]===>', allParks[0]);
+  prisma.$disconnect();
+  //const data: string = JSON.stringify(parks);
+  res.status(200).json({ allParks: allParks });
 }
