@@ -24,6 +24,9 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { useSession, signIn, signOut } from "next-auth/react";
+import Button from '@mui/material/Button';
+
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -147,6 +150,7 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
+  const { data: session } = useSession();
 
   return (
     <Toolbar
@@ -163,7 +167,15 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-          National Parks
+          <p>National Parks</p>
+          { session ? (
+            <div>
+              Signed in as {session.user.email}
+              <Button variant="outlined" onClick={() => signOut()}>Sign out</Button>
+            </div>
+            ) : (
+            <Button variant="contained" onClick={() => signIn(undefined, {callbackUrl: '/parks'})}>Sign in</Button>
+          )}
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -248,7 +260,7 @@ export default function ParkList() {
       .then(data => {
         setParks(data.allParks);
       });
-  });
+  },[]);
 
   return (
     <Box sx={{ width: '100%' }}>

@@ -1,7 +1,8 @@
 "use client";
 
 import { useSession, signIn, signOut } from "next-auth/react"
-import UserInfo from "./userInfo"
+import UserInfo from "./userInfo";
+import Button from '@mui/material/Button';
 
 export default function Component({children}) {
   const { data: session } = useSession()
@@ -11,15 +12,14 @@ export default function Component({children}) {
       <>
         Signed in as {session.user.email} <br />
         <UserInfo data={session.user} />
-        <button onClick={() => signOut()}>Sign out</button>
+        <Button onClick={() => signOut()}>Sign out</Button>
         {children}
       </>
     )
   }
   return (
     <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
+      <Button variant="contained" onClick={() => signIn(undefined, {callbackUrl: '/parks'})}>Sign in</Button>
     </>
   )
 }

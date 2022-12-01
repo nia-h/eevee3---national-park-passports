@@ -13,10 +13,7 @@ export default function Home() {
       <Image src={archPic} alt='icon showing Delicate Arch in Moab' width={250} height={250} />
       <SignupModal />
       <br />
-      {/* <LoginModal /> */}
-      <LoginBtn>
-        {/* <dashBoard /> */}
-      </LoginBtn>
+      <LoginBtn />
     </div>
   );
 }
