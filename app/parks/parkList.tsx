@@ -1,6 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import ReactDom from 'react-dom';
+import Link from 'next/link';
 import { Park } from '../../typings';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -23,6 +24,9 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import { useSession, signIn, signOut } from "next-auth/react";
+import Button from '@mui/material/Button';
+
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -146,6 +150,7 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
+  const { data: session } = useSession();
 
   return (
     <Toolbar
@@ -162,7 +167,15 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-          National Parks
+          <p>National Parks</p>
+          { session ? (
+            <div>
+              Signed in as {session.user.email}
+              <Button variant="outlined" onClick={() => signOut()}>Sign out</Button>
+            </div>
+            ) : (
+            <Button variant="contained" onClick={() => signIn(undefined, {callbackUrl: '/parks'})}>Sign in</Button>
+          )}
         </Typography>
       )}
       {numSelected > 0 ? (
@@ -245,9 +258,9 @@ export default function ParkList() {
     fetch('http://localhost:3000/api/hello')
       .then(data => data.json())
       .then(data => {
-        setParks(JSON.parse(data.name));
+        setParks(data.allParks);
       });
-  });
+  },[]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -277,7 +290,7 @@ export default function ParkList() {
                         />
                       </TableCell>
                       <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {row.park_name}
+                        {<Link href={`/parks/${row.park_code}`}>{row.park_name}</Link>};
                       </TableCell>
                       <TableCell align='right'>{row.state}</TableCell>
                       <TableCell align='right'>{row.park_code}</TableCell>
