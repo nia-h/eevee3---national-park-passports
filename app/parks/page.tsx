@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import ParkList from './parkList';
 
 export default function Parks() {
-  const [userEmail, setUserEmail] = useState('nia@test.com');
+  const [userEmail, setUserEmail] = useState('joy@test.com');
   return (
     <div>
       {/*@ts-ignore*/}

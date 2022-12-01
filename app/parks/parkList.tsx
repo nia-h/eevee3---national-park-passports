@@ -82,12 +82,12 @@ const headCells: readonly HeadCell[] = [
     disablePadding: false,
     label: 'Park Code',
   },
-  // {
-  //   id: 'carbs',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'Carbs (g)',
-  // },
+  {
+    id: 'visited',
+    numeric: true,
+    disablePadding: false,
+    label: 'Visted',
+  },
   // {
   //   id: 'protein',
   //   numeric: true,
@@ -186,9 +186,11 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 
 export default function ParkList(props: any) {
   const userEmail = props.userEmail;
-  console.log('userEmail==>', userEmail);
 
   const [parks, setParks] = useState([]);
+  const [user, setUser] = useState('');
+  const [visits, setVisits] = useState([]);
+
   const [order, setOrder] = useState<Order>('asc');
   const [orderBy, setOrderBy] = useState<keyof Park>('state');
   const [selected, setSelected] = useState<readonly string[]>([]);
@@ -254,58 +256,93 @@ export default function ParkList(props: any) {
       });
   }, []);
 
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
-            <EnhancedTableHead numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={parks.length} />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-                rows.sort(getComparator(order, orderBy)).slice() */}
-              {stableSort(parks, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.park_name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+  useEffect(() => {
+    fetch('http://localhost:3000/api/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
+    })
+      .then(data => data.json())
+      .then(data => {
+        setUser(data);
+      });
+  }, []);
 
-                  return (
-                    <TableRow hover onClick={event => handleClick(event, row.park_name)} role='checkbox' aria-checked={isItemSelected} tabIndex={-1} key={row.park_name} selected={isItemSelected}>
-                      <TableCell padding='checkbox'>
-                        <Checkbox
-                          color='primary'
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component='th' id={labelId} scope='row' padding='none'>
-                        {<Link href={`/parks/${row.park_code}`}>{row.park_name}</Link>};
-                      </TableCell>
-                      <TableCell align='right'>{row.state}</TableCell>
-                      <TableCell align='right'>{row.park_code}</TableCell>
-                      {/* <TableCell align='right'>{row.carbs}</TableCell>
-                        <TableCell align='right'>{row.protein}</TableCell> */}
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination rowsPerPageOptions={[5, 10, 25]} component='div' count={parks.length} rowsPerPage={rowsPerPage} page={page} onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage} />
-      </Paper>
-      <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label='Dense padding' />
-    </Box>
+  useEffect(() => {
+    fetch('http://localhost:3000/api/visits', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user.pk_user_id), // body data type must match "Content-Type" header
+    })
+      .then(data => data.json())
+      .then(data => {
+        console.log('data==>', data);
+        setVisits(data.map(v => v.fk_park_id));
+
+        console.log('visits==>', visits);
+      });
+  }, [user]);
+
+  return (
+    <>
+      <h1>Hello {user.username}</h1>
+      {/* <h1>your visits: {visits}</h1> */}
+
+      <Box sx={{ width: '100%' }}>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
+              <EnhancedTableHead numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={parks.length} />
+              <TableBody>
+                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+                rows.sort(getComparator(order, orderBy)).slice() */}
+                {stableSort(parks, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.park_name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                      <TableRow hover onClick={event => handleClick(event, row.park_name)} role='checkbox' aria-checked={isItemSelected} tabIndex={-1} key={row.park_name} selected={isItemSelected}>
+                        <TableCell padding='checkbox'>
+                          <Checkbox
+                            color='primary'
+                            checked={isItemSelected}
+                            inputProps={{
+                              'aria-labelledby': labelId,
+                            }}
+                          />
+                        </TableCell>
+                        <TableCell component='th' id={labelId} scope='row' padding='none'>
+                          {<Link href={`/parks/${row.park_code}`}>{row.park_name}</Link>};
+                        </TableCell>
+                        <TableCell align='right'>{row.state}</TableCell>
+                        <TableCell align='right'>{row.park_code}</TableCell>
+                        <TableCell align='right'>{`${visits.includes(row.pk_park_id) ? 'Yes' : 'No'}`}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}>
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination rowsPerPageOptions={[5, 10, 25]} component='div' count={parks.length} rowsPerPage={rowsPerPage} page={page} onPageChange={handleChangePage} onRowsPerPageChange={handleChangeRowsPerPage} />
+        </Paper>
+        <FormControlLabel control={<Switch checked={dense} onChange={handleChangeDense} />} label='Dense padding' />
+      </Box>
+    </>
   );
 }
 
