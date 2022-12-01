@@ -148,6 +148,7 @@ interface EnhancedTableToolbarProps {
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
+  const { data: session } = useSession();
 
   return (
     <Toolbar
@@ -164,7 +165,19 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
-          National Parks
+          <p>National Parks</p>
+          {session ? (
+            <div>
+              Signed in as {session.user.email}
+              <Button variant='outlined' onClick={() => signOut()}>
+                Sign out
+              </Button>
+            </div>
+          ) : (
+            <Button variant='contained' onClick={() => signIn(undefined, { callbackUrl: '/parks' })}>
+              Sign in
+            </Button>
+          )}
         </Typography>
       )}
       {numSelected > 0 ? (
