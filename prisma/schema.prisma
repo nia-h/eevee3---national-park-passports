@@ -10,10 +10,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum DofV {
-  Date
-  null
-}
+// enum DofV {
+//   Date
+//   null
+// }
 
 model User {
   pk_user_id  String        @id @default(cuid())
@@ -36,11 +36,11 @@ model Park {
 }
 
 model visitedPark {
-  pk_uvp_id     String  @id @default(cuid())
-  user          User    @relation(fields: [fk_user_id], references: [pk_user_id])
-  fk_user_id    String
-  date_of_visit DofV    @default(null)
-  park          Park    @relation(fields: [fk_park_id], references: [pk_park_id])
-  fk_park_id    String
-  fav           Boolean
+  pk_uvp_id  String  @id @default(cuid())
+  user       User    @relation(fields: [fk_user_id], references: [pk_user_id])
+  fk_user_id String
+  // date_of_visit DofV    @default(null)
+  park       Park    @relation(fields: [fk_park_id], references: [pk_park_id])
+  fk_park_id String
+  fav        Boolean
 }

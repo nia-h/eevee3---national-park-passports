@@ -247,7 +247,7 @@ export default function ParkList(props: any) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parks.length) : 0;
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/hello')
+    fetch('http://localhost:3000/api/allParks')
       .then(data => data.json())
       .then(data => {
         setParks(data.allParks);
