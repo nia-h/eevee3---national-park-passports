@@ -11,7 +11,7 @@ export default function Component({children}) {
     return (
       <>
         Signed in as {session.user.email} <br />
-        <UserInfo data={session.user} />
+        {/* <UserInfo data={session.user} /> */}
         <Button onClick={() => signOut()}>Sign out</Button>
         {children}
       </>

@@ -2,7 +2,6 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import archPic from '.././public/arch.ico';
 import SignupModal from './SignupModal';
-import LoginModal from './LoginModal';
 import LoginBtn from './LoginBtn';
 
 //home page component
