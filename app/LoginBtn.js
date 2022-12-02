@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { useSession, signIn, signOut } from "next-auth/react"
-import UserInfo from "./userInfo";
+import { useSession, signIn, signOut } from 'next-auth/react';
+import UserInfo from './userInfo';
 import Button from '@mui/material/Button';
 
-export default function Component({children}) {
-  const { data: session } = useSession()
+export default function Component({ children }) {
+  const { data: session } = useSession();
   if (session) {
     console.log(session);
     return (
@@ -15,11 +15,13 @@ export default function Component({children}) {
         <Button onClick={() => signOut()}>Sign out</Button>
         {children}
       </>
-    )
+    );
   }
   return (
     <>
-      <Button variant="contained" onClick={() => signIn(undefined, {callbackUrl: '/parks'})}>Sign in</Button>
+      <Button variant='contained' onClick={() => signIn(undefined, { callbackUrl: '/parks' })}>
+        Sign in
+      </Button>
     </>
-  )
+  );
 }

@@ -25,6 +25,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import { AnyRecord } from 'dns';
+import { useSession, signIn, signOut } from 'next-auth/react';
+import Button from '@mui/material/Button';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -198,7 +200,11 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export default function ParkList(props: any) {
+  //const { data } = useSession();
+  //const userEmail = data.user.email;
   const userEmail = props.userEmail;
+
+  //const [email, setEmail] = useState('');
 
   const [parks, setParks] = useState([]);
   const [user, setUser] = useState('');
@@ -302,7 +308,7 @@ export default function ParkList(props: any) {
 
   return (
     <>
-      <h1>Hello {user.username}</h1>
+      <h1>Hello, {user.username}</h1>
       {/* <h1>your visits: {visits}</h1> */}
 
       <Box sx={{ width: '100%' }}>
