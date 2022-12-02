@@ -1,3 +1,4 @@
+//'use client'
 import Image from 'next/image';
 import styles from './page.module.css'
 
@@ -103,13 +104,13 @@ export default async function ParkDetails({ params }) {
       <div className={styles.container}id='parkNameAndPhoto'>
         <h1 className={styles.header}>{fullName}</h1>
         <p className={styles.header}>{description}</p>
-        <Image 
+        {/* <Image 
           src={imageArray[4]} 
           alt={imageArray[2]} 
           width='375'
           height='250'
           className={styles.header}
-        />
+        /> */}
         <br />
         {/* <caption>{imageArray[3]}</caption>
         <caption>`Photographer: ${imageArray[3]}`</caption> */}

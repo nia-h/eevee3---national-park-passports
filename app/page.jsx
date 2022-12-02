@@ -2,7 +2,7 @@ import styles from './page.module.css';
 import Image from 'next/image';
 import archPic from '.././public/arch.ico';
 import SignupModal from './SignupModal';
-import LoginModal from './LoginModal';
+import LoginBtn from './LoginBtn';
 
 //home page component
 export default function Home() {
@@ -12,7 +12,7 @@ export default function Home() {
       <Image src={archPic} alt='icon showing Delicate Arch in Moab' width={250} height={250} />
       <SignupModal />
       <br />
-      <LoginModal />
+      <LoginBtn />
     </div>
   );
 }

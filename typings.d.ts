@@ -5,3 +5,9 @@ export interface Park {
   state: string;
   // visitedUser: any?;
 }
+
+export interface User {
+  pk_user_id: string | null;
+  email: string | null;
+  // visitedPark: Array<any>;
+}
