@@ -200,9 +200,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 
 export default function ParkList(props: any) {
-  //const { data } = useSession();
-  //const userEmail = data.user.email;
-  const userEmail = props.userEmail;
+  let userEmail = undefined;
+  const { data: session } = useSession();
+  if (session) {
+    console.log('session==>', session);
+    userEmail = session.user.email;
+    console.log('email', userEmail);
+  }
+
+  // const userEmail = session.user.email;
+  //const userEmail = props.userEmail;
 
   //const [email, setEmail] = useState('');
 
@@ -276,18 +283,20 @@ export default function ParkList(props: any) {
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/user', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
-    })
-      .then(data => data.json())
-      .then(data => {
-        setUser(data);
-      });
-  }, []);
+    if (userEmail !== undefined) {
+      fetch('http://localhost:3000/api/user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
+      })
+        .then(data => data.json())
+        .then(data => {
+          setUser(data);
+        });
+    }
+  }, [userEmail]);
 
   useEffect(() => {
     fetch('http://localhost:3000/api/visits', {
@@ -308,7 +317,7 @@ export default function ParkList(props: any) {
 
   return (
     <>
-      <h1>Hello, {user.username}</h1>
+      <h1>Hello {user.username},</h1>
       {/* <h1>your visits: {visits}</h1> */}
 
       <Box sx={{ width: '100%' }}>
