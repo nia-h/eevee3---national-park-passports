@@ -1,5 +1,14 @@
 .container {
   padding: 0 2rem;
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.h1 {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  color: black;
 }
 
 .main {

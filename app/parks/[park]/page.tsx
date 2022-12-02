@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import hydrateRoot from 'react-dom';
 import styles from './page.module.css'
 
 function helper() {
@@ -43,8 +42,10 @@ export default async function ParkDetails({ params }) {
     weatherInfo
    } = data[0];
 
-  const activityList = activities.map((activity: any) => {
-    <li>{activity.name}</li>;
+  const activityList = activities.map((activity: any, i:any) => {
+    return (
+      <li key={i}>{activity.name}</li>
+    )
   });
 
   const feeInfo = entranceFees.map((fee: any, i: any) => {
@@ -56,6 +57,14 @@ export default async function ParkDetails({ params }) {
       </div>
     )
   });
+
+  const imageArray = Object.values(images[0])
+  // console.log('imageArray', imageArray)
+  const imageURL = images[0].url;
+  const imageAlt = images[0].altText;
+  const imageCaption = images[0].caption;
+
+
 
   const passInfo = entrancePasses.map((fee: any, i: any) => {
     return (
@@ -92,57 +101,60 @@ export default async function ParkDetails({ params }) {
   return (
     <div id={styles.app}>
       <div className={styles.container}id='parkNameAndPhoto'>
-        <h1>{fullName}</h1>
-        <p>{description}</p>
+        <h1 className={styles.header}>{fullName}</h1>
+        <p className={styles.header}>{description}</p>
         <Image 
-          src={images[0].url} 
-          alt={images[0].altText} 
+          src={imageArray[4]} 
+          alt={imageArray[2]} 
           width='375'
           height='250'
+          className={styles.header}
         />
         <br />
-        <caption>{images[0].caption}</caption>
-        <caption>`Photographer: ${images[0].credit}`</caption>
+        {/* <caption>{imageArray[3]}</caption>
+        <caption>`Photographer: ${imageArray[3]}`</caption> */}
         <br/>
         <br/>
-        <a href={url}>More Park Details</a>
+        <a className={styles.header} href={url}>More Park Details</a>
       </div>
       <br />
       <div className={styles.container} id={styles.parkActivities}>
-        <h2>Park Activities</h2>
-        <ul>{activityList}</ul>
+        <h2 className={styles.header}>Park Activities</h2>
+        <ul className={styles.header}>{activityList}</ul>
       </div>
       <br />
       <div className={styles.container} id={styles.parkFees}>
-        <h2>Entrance Fees & Passes</h2>
+        <h2 className={styles.header}>Entrance Fees & Passes</h2>
         {feeInfo}
         {passInfo}
       </div>
       <br />
       <div className={styles.container} id={styles.parkOperatingHours}>
-        <h2>Operating Hours</h2>
-        <h3>{operatingHours[0].description}</h3>
-        <ul>{hours}</ul>
+        <h2 className={styles.header}>Operating Hours</h2>
+        <h3 className={styles.header}>{operatingHours[0].description}</h3>
+        <ul className={styles.header}>{hours}</ul>
       </div>
       <br />
       <div className={styles.container} id={styles.parkDirections}>
-        <h2>Parking Directions</h2>
-        <p>{directionsInfo}</p>
-        <a href={directionsUrl}>Click for Directions</a>
+        <h2 className={styles.header}>Parking Directions</h2>
+        <p className={styles.header}>{directionsInfo}</p>
+        <a  className={styles.header} href={directionsUrl}>Click for Directions</a>
       </div>
       <br />
       <div className={styles.container} id={styles.parkWeather}>
-        <h2>Weather Info</h2>
-        <p>{weatherInfo}</p>
+        <h2 className={styles.header}>Weather Info</h2>
+        <p className={styles.header}>{weatherInfo}</p>
       </div>
       <br />
       <div className={styles.container} id={styles.parkContactInfo}>
-        <h2>Park Phone Number</h2>
-        <p>{contacts.phoneNumbers[0].phoneNumber}</p>
+        <h2 className={styles.header}>Park Phone Number</h2>
+        <p className={styles.header}>{contacts.phoneNumbers[0].phoneNumber}</p>
       </div>
     </div>
   );
 }
+
+
 
 
 

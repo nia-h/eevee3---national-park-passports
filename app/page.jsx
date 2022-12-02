@@ -8,7 +8,7 @@ import LoginModal from './LoginModal';
 export default function Home() {
   return (
     <div className={styles.container}>
-      <h1>National Parks Digital Passport</h1>
+      <h1 className={styles.h1}>National Parks Digital Passport</h1>
       <Image src={archPic} alt='icon showing Delicate Arch in Moab' width={250} height={250} />
       <SignupModal />
       <br />
