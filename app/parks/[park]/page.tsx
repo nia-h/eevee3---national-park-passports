@@ -1,3 +1,4 @@
+//'use client'
 import Image from 'next/image';
 import hydrateRoot from 'react-dom';
 
@@ -89,46 +90,38 @@ export default async function ParkDetails({ params }) {
       large size screen: title on top --> 3 columns of 2 rows
   */
   return (
-    <>
-      <div id='parkNameAndPhoto'>
-        <h1>{fullName}</h1>
-        <p>{description}</p>
-        {/* <Image src={images[0].url} alt={images[0].altText} width='300' height='300'/> */}
-        <caption>{images[0].caption}</caption>
-        <caption>`Photographer: ${images[0].credit}`</caption>
-        <br />
-        <br />
-        {/* <a href={url}>More Park Details</a> */}
-      </div>
-      <div id='parkActivities'>
+    <><div id='parkNameAndPhoto'>
+      <h1>{fullName}</h1>
+      <p>{description}</p>
+      {/* <Image src={images[0].url} alt={images[0].altText} width='300' height='300'/> */}
+      {/* <caption>{images[0].caption}</caption>
+      <caption>`Photographer: ${images[0].credit}`</caption> */}
+      <br />
+      <br />
+      {/* <a href={url}>More Park Details</a> */}
+    </div><div id='parkActivities'>
         <h2>Park Activities</h2>
         <ul>{activityList}</ul>
-      </div>
-      <div id='parkFees'>
+      </div><div id='parkFees'>
         <h2>Entrance Fees & Passes</h2>
         {feeInfo}
         {passInfo}
-      </div>
-      <div id='parkOperatingHours'>
+      </div><div id='parkOperatingHours'>
         <h2>Operating Hours</h2>
         <h3>{operatingHours[0].description}</h3>
         <ul>{hours}</ul>
-      </div>
-      <div id='parkDirections'>
+      </div><div id='parkDirections'>
         <h2>Parking Directions</h2>
         <p>{directionsInfo}</p>
         {/* <a href={directionsUrl}>Click for Directions</a> */}
-      </div>
-      <div id='parkWeather'>
+      </div><div id='parkWeather'>
         <h2>Weather Info</h2>
         <p>{weatherInfo}</p>
-      </div>
-      <div id='parkContactInfo'>
+      </div><div id='parkContactInfo'>
         <h2>Park Phone Number</h2>
         <p>{contacts.phoneNumbers[0].phoneNumber}</p>
-      </div>
-    </>
-  );
+      </div></>
+  )
 }
 
 
