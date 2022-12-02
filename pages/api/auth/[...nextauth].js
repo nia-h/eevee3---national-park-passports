@@ -1,6 +1,6 @@
-import NextAuth from "next-auth"
-import GithubProvider from "next-auth/providers/github";
-import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth from 'next-auth';
+import GithubProvider from 'next-auth/providers/github';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -13,8 +13,8 @@ export const authOptions = {
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
       credentials: {
-        email: { label: "Email", type: "text", placeholder: "jsmith@gmail.com" },
-        password: {  label: "Password", type: "password" }
+        email: { label: 'Email', type: 'text', placeholder: 'jsmith@gmail.com' },
+        password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials, req) {
         // You need to provide your own logic here that takes the credentials
@@ -26,18 +26,18 @@ export const authOptions = {
         const res = await fetch('http://localhost:3000/api/auth/credential', {
           method: 'POST',
           body: JSON.stringify(credentials),
-          headers: { "Content-Type": "application/json" }
-        })
+          headers: { 'Content-Type': 'application/json' },
+        });
         const user = await res.json();
-        console.log("here is the response->",user);
-  
+        //console.log("here is the response->",user);
+
         // If no error and we have user data, return it
         if (res.ok && user) {
-          return user
+          return user;
         }
         // Return null if user data could not be retrieved
-        return null
-      }
+        return null;
+      },
     }),
     GithubProvider({
       clientId: process.env.GITHUB_ID,
@@ -45,5 +45,5 @@ export const authOptions = {
     }),
     // ...add more providers here
   ],
-}
-export default NextAuth(authOptions)
+};
+export default NextAuth(authOptions);

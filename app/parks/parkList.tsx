@@ -203,9 +203,9 @@ export default function ParkList(props: any) {
   let userEmail = undefined;
   const { data: session } = useSession();
   if (session) {
-    console.log('session==>', session);
+    //console.log('session==>', session);
     userEmail = session.user.email;
-    console.log('email', userEmail);
+    // console.log('email', userEmail);
     fetch('http://localhost:3000/api/user', {
       method: 'POST',
       headers: {
@@ -320,17 +320,17 @@ export default function ParkList(props: any) {
       })
         .then(data => data.json())
         .then(data => {
-          console.log('data==>', data);
+          //console.log('data==>', data);
           setVisits(data.map(v => v.fk_park_id));
 
-          console.log('visits==>', visits);
+          //console.log('visits==>', visits);
         });
     }
   }, [user]);
 
   return (
     <>
-      <h1>Hello {user ? user.username : ''},</h1>
+      <h1>Hello {user ? user.username : ''}</h1>
       {/* <h1>your visits: {visits}</h1> */}
 
       <Box sx={{ width: '100%' }}>
