@@ -171,7 +171,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           {session ? (
             <div>
               Signed in as {session.user.email}
-              <Button variant='outlined' onClick={() => signOut()}>
+              <Button variant='outlined' onClick={() => signOut(undefined, { callbackUrl: '/' })}>
                 Sign out
               </Button>
             </div>
@@ -206,6 +206,17 @@ export default function ParkList(props: any) {
     console.log('session==>', session);
     userEmail = session.user.email;
     console.log('email', userEmail);
+    fetch('http://localhost:3000/api/user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
+    })
+      .then(data => data.json())
+      .then(data => {
+        setUser(data);
+      });
   }
 
   // const userEmail = session.user.email;
@@ -282,42 +293,44 @@ export default function ParkList(props: any) {
       });
   }, []);
 
+  // useEffect(() => {
+  //   if (userEmail !== undefined) {
+  //     fetch('http://localhost:3000/api/user', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
+  //     })
+  //       .then(data => data.json())
+  //       .then(data => {
+  //         setUser(data);
+  //       });
+  //   }
+  // }, [userEmail]);
+
   useEffect(() => {
-    if (userEmail !== undefined) {
-      fetch('http://localhost:3000/api/user', {
+    if (user) {
+      fetch('http://localhost:3000/api/visits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(userEmail), // body data type must match "Content-Type" header
+        body: JSON.stringify(user.pk_user_id), // body data type must match "Content-Type" header
       })
         .then(data => data.json())
         .then(data => {
-          setUser(data);
+          console.log('data==>', data);
+          setVisits(data.map(v => v.fk_park_id));
+
+          console.log('visits==>', visits);
         });
     }
-  }, [userEmail]);
-
-  useEffect(() => {
-    fetch('http://localhost:3000/api/visits', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user.pk_user_id), // body data type must match "Content-Type" header
-    })
-      .then(data => data.json())
-      .then(data => {
-        console.log('data==>', data);
-        setVisits(data.map(v => v.fk_park_id));
-
-        console.log('visits==>', visits);
-      });
   }, [user]);
 
   return (
     <>
-      <h1>Hello {user.username},</h1>
+      <h1>Hello {user ? user.username : ''},</h1>
       {/* <h1>your visits: {visits}</h1> */}
 
       <Box sx={{ width: '100%' }}>
