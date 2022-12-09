@@ -2,9 +2,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { Park } from '../../typings';
 import prisma from '../../lib/prisma';
-import parkBasicInfo from '../../data/parkBasicInfo.json';
+//import parkBasicInfo from '../../data/parkBasicInfo.json';
 
-console.log('parkBasicInfo.length==>', parkBasicInfo.length);
+//console.log('parkBasicInfo.length==>', parkBasicInfo.length);
 
 type Data = {
   allParks: Park[];

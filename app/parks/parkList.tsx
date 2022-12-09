@@ -60,7 +60,7 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 
 interface HeadCell {
   disablePadding: boolean;
-  id: keyof Park;
+  id: string;
   label: string;
   numeric: boolean;
 }
@@ -100,7 +100,7 @@ const headCells: readonly HeadCell[] = [
 
 interface EnhancedTableProps {
   numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Park) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: string) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
@@ -109,7 +109,7 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
-  const createSortHandler = (property: keyof Park) => (event: React.MouseEvent<unknown>) => {
+  const createSortHandler = (property: string) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -168,9 +168,12 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       ) : (
         <Typography sx={{ flex: '1 1 100%' }} variant='h6' id='tableTitle' component='div'>
           <p>National Parks</p>
+          {/*prettier-ignore*/}
           {session ? (
             <div>
-              Signed in as {session.user.email}
+              {/*@ts-ignore*/}
+              Signed in as {session!.user.email}
+              {/*@ts-ignore*/}
               <Button variant='outlined' onClick={() => signOut(undefined, { callbackUrl: '/' })}>
                 Sign out
               </Button>
@@ -204,9 +207,10 @@ export default function ParkList(props: any) {
   const { data: session } = useSession();
   if (session) {
     //console.log('session==>', session);
+    /*@ts-ignore*/
     userEmail = session.user.email;
     // console.log('email', userEmail);
-    fetch('http://localhost:3000/api/user', {
+    fetch('/api/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -243,6 +247,7 @@ export default function ParkList(props: any) {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
+      /*@ts-ignore*/
       const newSelected = parks.map(n => n.park_name);
       setSelected(newSelected);
       return;
@@ -286,7 +291,7 @@ export default function ParkList(props: any) {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - parks.length) : 0;
 
   useEffect(() => {
-    fetch('http://localhost:3000/api/allParks')
+    fetch('/api/allParks')
       .then(data => data.json())
       .then(data => {
         setParks(data.allParks);
@@ -311,11 +316,12 @@ export default function ParkList(props: any) {
 
   useEffect(() => {
     if (user) {
-      fetch('http://localhost:3000/api/visits', {
+      fetch('/api/visits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        /*@ts-ignore*/
         body: JSON.stringify(user.pk_user_id), // body data type must match "Content-Type" header
       })
         .then(data => data.json())
@@ -330,6 +336,7 @@ export default function ParkList(props: any) {
 
   return (
     <>
+      {/*@ts-ignore*/}
       <h1>Hello {user ? user.username : ''}</h1>
       {/* <h1>your visits: {visits}</h1> */}
 
@@ -338,6 +345,7 @@ export default function ParkList(props: any) {
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer>
             <Table sx={{ minWidth: 750 }} aria-labelledby='tableTitle' size={dense ? 'small' : 'medium'}>
+              {/*@ts-ignore*/}
               <EnhancedTableHead numSelected={selected.length} order={order} orderBy={orderBy} onSelectAllClick={handleSelectAllClick} onRequestSort={handleRequestSort} rowCount={parks.length} />
               <TableBody>
                 {/* if you don't need to support IE11, you can replace the `stableSort` call with:
@@ -345,10 +353,12 @@ export default function ParkList(props: any) {
                 {stableSort(parks, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
+                    /*@ts-ignore*/
                     const isItemSelected = isSelected(row.park_name);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
+                      /*@ts-ignore*/
                       <TableRow hover onClick={event => handleClick(event, row.park_name)} role='checkbox' aria-checked={isItemSelected} tabIndex={-1} key={row.park_name} selected={isItemSelected}>
                         <TableCell padding='checkbox'>
                           <Checkbox
@@ -364,6 +374,7 @@ export default function ParkList(props: any) {
                         </TableCell>
                         <TableCell align='right'>{row.state}</TableCell>
                         <TableCell align='right'>{row.park_code}</TableCell>
+                        {/*@ts-ignore*/}
                         <TableCell align='right'>{`${visits.includes(row.pk_park_id) ? 'Yes' : 'No'}`}</TableCell>
                       </TableRow>
                     );

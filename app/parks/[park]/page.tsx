@@ -1,52 +1,66 @@
-//'use client'
+//'use client';
 import Image from 'next/image';
-import styles from './page.module.css'
+import styles from 'page.module.css';
+import axios from 'axios';
+import prisma from '../../../lib/prisma';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { CodeSharp } from '@mui/icons-material';
 
-function helper() {
-  const codes = fetch('http://localhost:3000/api/parkCodes')
-    .then(data => data.json())
-  
-  return codes;
+export async function getParkCodes() {
+  const parks = await prisma.park.findMany({
+    select: {
+      park_code: true,
+    },
+  });
+  prisma.$disconnect();
+
+  //const data: string = JSON.stringify(parks);
+  return parks.map(el => {
+    return el.park_code;
+  });
 }
 
+//   axios.get
+//   const codes = fetch('http://localhost:3000/api/parkCodes').then(data => data.json());
+
+//   return codes;
+// }\
+
+// export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+
+//   //console.log(parkCodes)
+
+//   res.status(200).json({ name: parkCodes });
+// }
+
 export async function generateStaticParams() {
+  const codes = await getParkCodes();
 
-  const codes = await helper();
+  //const codes = await res.json();
+  console.log('codes==>', codes);
+  const trimmedCodes = codes.splice(0, 10);
+  const params = trimmedCodes.map(code => ({
+    park: code,
+  }));
+  // const params = codes.map(code => ({
+  //   park: code,
+  // }));
 
-  return (
-    codes.name.map((code) => ({
-      park: code,
-    }))
-  );
+  console.log('params==>,', params);
+  return params;
 }
 
 export default async function ParkDetails({ params }) {
   const { park } = params;
 
-  const parkInfo = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${park}&api_key=I9sAHx1bu9OtW60yyqrgRBMPTDnsuPrMQJrkngf1`)
-    .then(res => res.json())
+  const parkInfo = await fetch(`https://developer.nps.gov/api/v1/parks?parkCode=${park}&api_key=I9sAHx1bu9OtW60yyqrgRBMPTDnsuPrMQJrkngf1`).then(res => res.json());
 
   const { data } = parkInfo;
 
-  const {
-    fullName, 
-    url,
-    description, 
-    activities, 
-    contacts, 
-    entranceFees, 
-    entrancePasses, 
-    directionsInfo, 
-    directionsUrl, 
-    operatingHours, 
-    images, 
-    weatherInfo
-   } = data[0];
+  const { fullName, url, description, activities, contacts, entranceFees, entrancePasses, directionsInfo, directionsUrl, operatingHours, images, weatherInfo } = data[0];
 
-  const activityList = activities.map((activity: any, i:any) => {
-    return (
-      <li key={i}>{activity.name}</li>
-    )
+  const activityList = activities.map((activity: any, i: any) => {
+    return <li key={i}>{activity.name}</li>;
   });
 
   const feeInfo = entranceFees.map((fee: any, i: any) => {
@@ -56,16 +70,16 @@ export default async function ParkDetails({ params }) {
         <p>{fee.cost}</p>
         <p>{fee.description}</p>
       </div>
-    )
+    );
   });
 
-  const imageArray = Object.values(images[0])
+  const imageArray = Object.values(images[0]);
+  const imageURL: any = imageArray[4];
+  console.log('imageURL==>', imageURL);
   // console.log('imageArray', imageArray)
-  const imageURL = images[0].url;
-  const imageAlt = images[0].altText;
-  const imageCaption = images[0].caption;
-
-
+  // const imageURL = images[0].url;
+  // const imageAlt = images[0].altText;
+  // const imageCaption = images[0].caption;
 
   const passInfo = entrancePasses.map((fee: any, i: any) => {
     return (
@@ -74,19 +88,18 @@ export default async function ParkDetails({ params }) {
         <p>{fee.cost}</p>
         <p>{fee.description}</p>
       </div>
-    )
+    );
   });
 
-  const obj = operatingHours[0].standardHours;
+  const obj = operatingHours[0] && operatingHours[0].standardHours ? operatingHours[0].standardHours : {};
   const arr = [];
   for (const key in obj) {
+    /*@ts-ignore*/
     arr.push(`${key}: ${obj[key]}`);
   }
   const hours = arr.map((hour, i) => {
-    return (
-      <li key={i}>{hour}</li>
-    )
-  })
+    return <li key={i}>{hour}</li>;
+  });
 
   // STYLING:
   /*
@@ -101,22 +114,19 @@ export default async function ParkDetails({ params }) {
   */
   return (
     <div id={styles.app}>
-      <div className={styles.container}id='parkNameAndPhoto'>
+      <div className={styles.container} id='parkNameAndPhoto'>
         <h1 className={styles.header}>{fullName}</h1>
         <p className={styles.header}>{description}</p>
-        {/* <Image 
-          src={imageArray[4]} 
-          alt={imageArray[2]} 
-          width='375'
-          height='250'
-          className={styles.header}
-        /> */}
+        {/*typescript-ignore*/}
+        <Image src={imageURL} alt='something went wrong' width='375' height='250' className={styles.header} />
         <br />
-        {/* <caption>{imageArray[3]}</caption>
-        <caption>`Photographer: ${imageArray[3]}`</caption> */}
-        <br/>
-        <br/>
-        <a className={styles.header} href={url}>More Park Details</a>
+        {/* <caption>{imageArray[3]}</caption> */}
+        {/* <caption>{`Photographer: ${imageArray[3]}`}</caption> */}
+        <br />
+        <br />
+        <a className={styles.header} href={url}>
+          More Park Details
+        </a>
       </div>
       <br />
       <div className={styles.container} id={styles.parkActivities}>
@@ -132,14 +142,16 @@ export default async function ParkDetails({ params }) {
       <br />
       <div className={styles.container} id={styles.parkOperatingHours}>
         <h2 className={styles.header}>Operating Hours</h2>
-        <h3 className={styles.header}>{operatingHours[0].description}</h3>
+        <h3 className={styles.header}>{operatingHours[0] && operatingHours[0].description ? operatingHours[0].description : 'n/a'}</h3>
         <ul className={styles.header}>{hours}</ul>
       </div>
       <br />
       <div className={styles.container} id={styles.parkDirections}>
         <h2 className={styles.header}>Parking Directions</h2>
         <p className={styles.header}>{directionsInfo}</p>
-        <a  className={styles.header} href={directionsUrl}>Click for Directions</a>
+        <a className={styles.header} href={directionsUrl}>
+          Click for Directions
+        </a>
       </div>
       <br />
       <div className={styles.container} id={styles.parkWeather}>
@@ -154,10 +166,3 @@ export default async function ParkDetails({ params }) {
     </div>
   );
 }
-
-
-
-
-
-
-
