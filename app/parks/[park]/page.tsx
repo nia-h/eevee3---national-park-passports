@@ -20,19 +20,6 @@ export async function getParkCodes() {
   });
 }
 
-//   axios.get
-//   const codes = fetch('http://localhost:3000/api/parkCodes').then(data => data.json());
-
-//   return codes;
-// }\
-
-// export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-
-//   //console.log(parkCodes)
-
-//   res.status(200).json({ name: parkCodes });
-// }
-
 export async function generateStaticParams() {
   const codes = await getParkCodes();
 
@@ -107,9 +94,9 @@ export default async function ParkDetails({ params }) {
   Each section also has their own id for syling
 
   Thoughts:
-  - for mobile, organize into a vertical line 
-  - each increase in screen width we could add a column? 
-      mid size screen: title on top --> 2 columns of 3 rows 
+  - for mobile, organize into a vertical line
+  - each increase in screen width we could add a column?
+      mid size screen: title on top --> 2 columns of 3 rows
       large size screen: title on top --> 3 columns of 2 rows
   */
   return (
