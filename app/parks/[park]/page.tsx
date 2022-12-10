@@ -21,6 +21,7 @@ export async function getParkCodes() {
 }
 
 export async function generateStaticParams() {
+  // only used for statically generated route segemnt(slug?) at build time
   const codes = await getParkCodes();
 
   //const codes = await res.json();
