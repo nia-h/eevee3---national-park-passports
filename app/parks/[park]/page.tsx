@@ -79,7 +79,9 @@ export default async function ParkDetails({ params }) {
     );
   });
 
-  const obj = operatingHours[0] && operatingHours[0].standardHours ? operatingHours[0].standardHours : {};
+  //const obj = operatingHours[0] && operatingHours[0].standardHours ? operatingHours[0].standardHours : {};
+  let obj: object | undefined = operatingHours[0]?.standardHours;
+  if (!obj) obj = {};
   const arr = [];
   for (const key in obj) {
     /*@ts-ignore*/
