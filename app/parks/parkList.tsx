@@ -1,4 +1,4 @@
-'use client';
+// 'use client';
 import React, { useEffect, useState } from 'react';
 import ReactDom from 'react-dom';
 import Link from 'next/link';
@@ -27,6 +27,10 @@ import { visuallyHidden } from '@mui/utils';
 import { AnyRecord } from 'dns';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Button from '@mui/material/Button';
+import ufetch from 'node-fetch';
+
+// const testFetch = await fetch('https://www.boredapi.com/api/activity');
+// console.log('testFetch=======>', testFetch);
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -205,6 +209,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 export default function ParkList(props: any) {
   let userEmail = undefined;
   const { data: session } = useSession();
+
   if (session) {
     //console.log('session==>', session);
     /*@ts-ignore*/
@@ -316,6 +321,7 @@ export default function ParkList(props: any) {
 
   useEffect(() => {
     if (user) {
+      /*@ts-ignore*/
       fetch('/api/visits', {
         method: 'POST',
         headers: {

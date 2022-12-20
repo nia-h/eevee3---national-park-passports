@@ -2,6 +2,12 @@
 const nextConfig = {
   experimental: {
     appDir: true,
+    topLevelAwait: true,
+  },
+  webpack(config) {
+    //reference: https://github.com/vercel/next.js/issues/43382
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+    return config;
   },
   images: {
     remotePatterns: [
