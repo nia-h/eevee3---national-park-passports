@@ -5,7 +5,7 @@ const nextConfig = {
     topLevelAwait: true,
   },
   webpack(config) {
-    //reference: https://github.com/vercel/next.js/issues/43382
+    //reference: https://github.com/vercel/next.js/issues/2
     config.experiments = { ...config.experiments, topLevelAwait: true };
     return config;
   },

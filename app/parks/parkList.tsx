@@ -27,7 +27,6 @@ import { visuallyHidden } from '@mui/utils';
 import { AnyRecord } from 'dns';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import Button from '@mui/material/Button';
-import ufetch from 'node-fetch';
 
 // const testFetch = await fetch('https://www.boredapi.com/api/activity');
 // console.log('testFetch=======>', testFetch);
