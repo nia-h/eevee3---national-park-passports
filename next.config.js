@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  webpack5: false,
   experimental: {
     appDir: true,
     topLevelAwait: true,
