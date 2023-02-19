@@ -337,7 +337,7 @@ export default function ParkList(props: any) {
           //console.log('visits==>', visits);
         });
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
